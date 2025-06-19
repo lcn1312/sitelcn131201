@@ -3,9 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucan_Piai.raw</title>
+    <title>lucan_piai.raw</title>
 
     <style>
+    #loading-bar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f8f8f8; /* Match new body background */
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 1; /* Ensure it's visible initially */
+    }
+
+    #loading-bar {
+        width: 0%;
+        height: 5px;
+        background-color: #000000;
+        transition: width 1.5s ease-out;
+    }
+
+    #loading-text {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #000000;
+    }
+
+    .creative-phrase {
+        position: fixed;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 10px;
+        color: rgba(0, 0, 0, 0.4);
+        z-index: 999; /* Below header/nav (z-index 1000) and loading bar (10000) */
+        padding: 2px 5px;
+        white-space: nowrap;
+        pointer-events: none; /* So they don't interfere with mouse interactions */
+    }
+
+    /* Creative positions */
+    #phrase-1 { top: 60px; left: 30px; transform: rotate(-2deg); }
+    #phrase-2 { top: 10vh; right: 5vw; transform: rotate(3deg); }
+    #phrase-3 { bottom: 5vh; left: 10vw; transform: rotate(1deg); }
+    #phrase-4 { top: 50vh; left: 2vw; transform: rotate(-5deg); font-size:9px; }
+    #phrase-5 { top: 30vh; right: 15vw; transform: rotate(2deg); }
+    #phrase-6 { bottom: 20vh; right: 8vw; transform: rotate(-3deg); font-size:9px; }
+    #phrase-7 { top: 80vh; left: 40vw; transform: rotate(4deg); }
+
+    #footer-scroll-hint {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 10px;
+        color: rgba(0, 0, 0, 0.6);
+        padding: 5px 10px;
+        z-index: 1001;
+        white-space: nowrap;
+        animation: blink-animation-footer 1.5s infinite alternate, glitch-animation-footer 10s infinite steps(20, end); /* Adjusted blink and glitch steps */
+    }
+
+    @keyframes blink-animation-footer { /* Renamed to avoid conflict if blink-animation exists */
+        from { opacity: 0.5; }
+        to { opacity: 0.9; }
+    }
+
+    @keyframes glitch-animation-footer {
+        0% { transform: translateX(-50%) translate(0,0); opacity: 0.6; }
+        98% { transform: translateX(-50%) translate(0,0); opacity: 0.6; } /* Normal state for most of the duration */
+        98.5% { transform: translateX(-50%) translate(-3px, 1px) skewX(-3deg); opacity: 1; color: #ff00ff; }
+        98.7% { transform: translateX(-50%) translate(2px, -1px) skewX(2deg); opacity: 0.4; color: #00ffff; }
+        98.9% { transform: translateX(-50%) translate(-1px, 2px) skewX(-1deg); opacity: 1; color: #ffff00; }
+        99.1% { transform: translateX(-50%) translate(1px, -2px) skewX(1deg); opacity: 0.7; color: rgba(0,0,0,0.6); } /* Return to normal color */
+        99.3% { transform: translateX(-50%) translate(0,0); opacity: 0.6; } /* End glitch sequence */
+        100% { transform: translateX(-50%) translate(0,0); opacity: 0.6; }
+    }
         * {
             margin: 0;
             padding: 0;
@@ -24,6 +101,22 @@
             overflow-y: hidden;
             height: 100vh;
             cursor: crosshair;
+    background-color: #f8f8f8;
+    background-image:
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 49px,
+            rgba(211, 211, 211, 0.3) 49px,
+            rgba(211, 211, 211, 0.3) 50px
+        ),
+        linear-gradient(
+            to right,
+            rgba(0,0,0,0.01),
+            rgba(0,0,0,0.005) 50%,
+            rgba(0,0,0,0.01)
+        );
+    background-size: 100% 50px, 100% 100%;
         }
 
         .container {
@@ -303,8 +396,8 @@
 
         .project-details {
             font-size: 12px;
-            opacity: 0.7;
-            line-height: 1.6;
+            opacity: 0.75;
+            line-height: 1.45;
         }
 
         .tech-spec {
@@ -500,7 +593,8 @@
 
             .project-details {
                 font-size: 10px;
-                line-height: 1.5;
+                opacity: 0.75;
+                line-height: 1.4;
             }
 
             .tech-spec {
@@ -631,15 +725,30 @@
 
             .project-details {
                 font-size: 9px;
+                opacity: 0.75;
+                line-height: 1.4;
             }
         }
     </style>
 </head>
 <body>
+    <div id="loading-bar-container">
+        <div id="loading-bar"></div>
+        <div id="loading-text">carregando...</div>
+    </div>
     <div class="cursor-follower"></div>
+    <div id="creative-phrases-container">
+        <span class="creative-phrase" id="phrase-1">// sistema_inicializado.exe</span>
+        <span class="creative-phrase" id="phrase-2">// carregando_portfolio.dat</span>
+        <span class="creative-phrase" id="phrase-3">// status: online.jpg</span>
+        <span class="creative-phrase" id="phrase-4">resolução: 4096x2160.dpi</span>
+        <span class="creative-phrase" id="phrase-5">formato: digital_art.format</span>
+        <span class="creative-phrase" id="phrase-6">capacidade: 420.tb</span>
+        <span class="creative-phrase" id="phrase-7">última_modificação: 2024.timestamp</span>
+    </div>
     
     <div class="header">
-        <div class="typewriter">system.init_portfolio.exe</div>
+        <div class="typewriter">system_failed.exe</div>
     </div>
 
     <nav class="nav">
@@ -671,10 +780,10 @@
         <!-- HOME SECTION -->
         <section class="section">
             <div class="fade-in">
-                <h1 class="title glitch">Lucan_Piai.raw</h1>
+                <h1 class="title glitch">lucan_piai</h1>
                 <p class="subtitle">cinematographer.mov | photographer.dng | visual_artist.psd</p>
                 <div class="tech-spec">
-                    resolution: 4K_ultra.hd | codec: h.264 | bitrate: 50mbps | format: .cinema_scope
+                    resolution: 4k_ultra.hd | codec: h.264 | bitrate: 50mbps | format: .cinema_scope
                 </div>
             </div>
         </section>
@@ -721,22 +830,22 @@
                 <h2 class="title" style="font-size: 48px; margin-bottom: 50px;">gallery_videos.archive</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item video-item" data-format="prores_422hq.mov">
-                        <span>commercial_campaign.mov<br>4K | 24fps | 10bit | prores_hq</span>
+                        <span>commercial_campaign.mov<br>4k | 24fps | 10bit | prores_hq</span>
                     </div>
                     <div class="gallery-item video-item" data-format="blackmagic.braw">
-                        <span>documentary_feature.braw<br>6K | 25fps | 12bit | blackmagic_raw</span>
+                        <span>documentary_feature.braw<br>6k | 25fps | 12bit | blackmagic_raw</span>
                     </div>
                     <div class="gallery-item video-item" data-format="red_dragon.r3d">
-                        <span>music_video_project.r3d<br>8K | 30fps | 16bit | redcode_raw</span>
+                        <span>music_video_project.r3d<br>8k | 30fps | 16bit | redcode_raw</span>
                     </div>
                     <div class="gallery-item video-item" data-format="sony_fx9.mxf">
-                        <span>corporate_interview.mxf<br>4K | 50fps | 10bit | xavc_intra</span>
+                        <span>corporate_interview.mxf<br>4k | 50fps | 10bit | xavc_intra</span>
                     </div>
                     <div class="gallery-item video-item" data-format="arri_alexa.ari">
-                        <span>short_film_drama.ari<br>4.5K | 24fps | 16bit | arriraw</span>
+                        <span>short_film_drama.ari<br>4.5k | 24fps | 16bit | arriraw</span>
                     </div>
                     <div class="gallery-item video-item" data-format="canon_c300.mp4">
-                        <span>wedding_ceremony.mp4<br>4K | 25fps | 8bit | h.264</span>
+                        <span>wedding_ceremony.mp4<br>4k | 25fps | 8bit | h.264</span>
                     </div>
                 </div>
                 <div class="tech-spec">
@@ -802,7 +911,7 @@
                         <div class="nft-title">cinematic_stills_001.nft</div>
                         <div class="nft-details">
                             1/1 edition<br>
-                            4K_cinema.scope<br>
+                            4k_cinema.scope<br>
                             from.documentary_project
                         </div>
                     </div>
@@ -849,47 +958,47 @@
                 <h2 class="title" style="font-size: 48px; margin-bottom: 50px;">projects.database</h2>
                 <div class="projects-list">
                     <div class="project-item">
-                        <h3 class="project-title">"Memórias_Urbanas.exhibition" - 2024</h3>
+                        <h3 class="project-title">"memórias_urbanas.exhibition" - 2024</h3>
                         <p class="project-details">
-                            exposição_individual | galeria_temporal.sp | 45.fotografias | tema: arquitetura_abandonada<br>
-                            técnica: film_35mm.kodak | impressão: fine_art.hahnemühle | dimensões: 70x100cm.cada<br>
-                            curadoria: maria_santos.critic | visitantes: 2.847.pessoas | período: 60.dias
+                            exposição_individual<br>galeria_temporal.sp<br>45.fotografias<br>tema: arquitetura_abandonada<br>
+                            técnica: film_35mm.kodak<br>impressão: fine_art.hahnemühle<br>dimensões: 70x100cm.cada<br>
+                            curadoria: maria_santos.critic<br>visitantes: 2.847.pessoas<br>período: 60.dias
                         </p>
                     </div>
                     <div class="project-item">
-                        <h3 class="project-title">"Luz_e_Movimento.documentary" - 2023</h3>
+                        <h3 class="project-title">"luz_e_movimento.documentary" - 2023</h3>
                         <p class="project-details">
-                            documentário_longa | 89.minutos | tema: dançarinos_urbanos.são_paulo<br>
-                            câmera: blackmagic_ursa.12k | lentes: zeiss_cp3.set | áudio: zoom_f8n.32bit<br>
-                            pós_produção: davinci_resolve.18 | distribuição: festivais_internacionais<br>
+                            documentário_longa<br>89.minutos<br>tema: dançarinos_urbanos.são_paulo<br>
+                            câmera: blackmagic_ursa.12k<br>lentes: zeiss_cp3.set<br>áudio: zoom_f8n.32bit<br>
+                            pós_produção: davinci_resolve.18<br>distribuição: festivais_internacionais<br>
                             prêmios: melhor_cinematografia.festival_curtas.2023
                         </p>
                     </div>
                     <div class="project-item">
-                        <h3 class="project-title">"Retratos_Invisíveis.series" - 2023</h3>
+                        <h3 class="project-title">"retratos_invisíveis.series" - 2023</h3>
                         <p class="project-details">
-                            série_fotográfica | 120.retratos | moradores_de_rua.centro_sp<br>
-                            equipamento: leica_m10.monochrom | filme: ilford_delta.3200<br>
-                            laboratório: revelação_manual | papel: ilford_multigrade<br>
-                            exposição: museu_da_imagem.som | impacto_social: ong_apoio.moradores
+                            série_fotográfica<br>120.retratos<br>moradores_de_rua.centro_sp<br>
+                            equipamento: leica_m10.monochrom<br>filme: ilford_delta.3200<br>
+                            laboratório: revelação_manual<br>papel: ilford_multigrade<br>
+                            exposição: museu_da_imagem.som<br>impacto_social: ong_apoio.moradores
                         </p>
                     </div>
                     <div class="project-item">
-                        <h3 class="project-title">"Paisagens_Digitais.vr_experience" - 2022</h3>
+                        <h3 class="project-title">"paisagens_digitais.vr_experience" - 2022</h3>
                         <p class="project-details">
-                            realidade_virtual | 360.graus | experiência_imersiva.15min<br>
-                            câmera: insta360_pro2.8k | software: unity.engine | headset: oculus_quest<br>
-                            trilha_sonora: binaural.audio | participação: bienal_arte_digital.2022<br>
+                            realidade_virtual<br>360.graus<br>experiência_imersiva.15min<br>
+                            câmera: insta360_pro2.8k<br>software: unity.engine<br>headset: oculus_quest<br>
+                            trilha_sonora: binaural.audio<br>participação: bienal_arte_digital.2022<br>
                             premiação: inovação_tecnológica.categoria_vr
                         </p>
                     </div>
                     <div class="project-item">
-                        <h3 class="project-title">"Movimento_Perpétuo.installation" - 2022</h3>
+                        <h3 class="project-title">"movimento_perpétuo.installation" - 2022</h3>
                         <p class="project-details">
-                            videoinstalação | 3.projetores | mapping_arquitetural<br>
-                            duração: loop_infinito.24h | resolução: 4k.cada_projetor<br>
-                            local: centro_cultural.banco_brasil | visitação: 30.dias<br>
-                            conceito: tempo.espaço.movimento | técnica: mad_mapper.software
+                            videoinstalação<br>3.projetores<br>mapping_arquitetural<br>
+                            duração: loop_infinito.24h<br>resolução: 4k.cada_projetor<br>
+                            local: centro_cultural.banco_brasil<br>visitação: 30.dias<br>
+                            conceito: tempo.espaço.movimento<br>técnica: mad_mapper.software
                         </p>
                     </div>
                 </div>
@@ -900,7 +1009,26 @@
         </section>
     </div>
 
+    <div id="footer-scroll-hint">navegação → horizontal.scroll | use_mouse_wheel.input</div>
     <script>
+    window.addEventListener('load', function() {
+        var loadingBar = document.getElementById('loading-bar');
+        var loadingContainer = document.getElementById('loading-bar-container');
+
+        if (loadingBar && loadingContainer) { // Check if elements exist
+            // Start the loading bar animation
+            loadingBar.style.width = '100%';
+
+            // Wait for the bar to finish animating, then hide the container
+            setTimeout(function() {
+                loadingContainer.style.opacity = '0';
+                loadingContainer.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(function() {
+                    loadingContainer.style.display = 'none';
+                }, 500); // Match opacity transition duration
+            }, 1500); // Match loading bar transition duration
+        }
+    });
         // Cursor follower
         const cursorFollower = document.querySelector('.cursor-follower');
         document.addEventListener('mousemove', (e) => {
